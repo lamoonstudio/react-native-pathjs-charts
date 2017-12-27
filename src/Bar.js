@@ -119,11 +119,12 @@ export default class BarChart extends Component {
 
     let values = chart.curves.map((curve) => accessor(curve.item))
     let chartArea = {x: {minValue: 0, maxValue: 200, min: 0, max: options.chartWidth},
-                     y: options.axisX.max || this.getMaxAndMin(values, chart.scale),
+                     y: options.axisY.max || this.getMaxAndMin(values, chart.scale),
                      margin:options.margin}
 
     let textStyle = fontAdapt(options.axisX.label)
     let labelOffset = this.props.options.axisX.label.offset || 20
+    console.log('chartArea -> ', chartArea);
 
     let lines = chart.curves.map(function (c, i) {
       let numDataGroups = this.props.data.length || 0
@@ -134,7 +135,6 @@ export default class BarChart extends Component {
       if (!Array.isArray(thresholdData)) {
         thresholdData = [thresholdData];
       }
-      console.log('thresholdData -> ', thresholdData);
 
       return (
         <G key={'lines' + i}>
