@@ -119,7 +119,7 @@ export default class BarChart extends Component {
 
     let values = chart.curves.map((curve) => accessor(curve.item))
     let chartArea = {x: {minValue: 0, maxValue: 200, min: 0, max: options.chartWidth},
-                     y: this.getMaxAndMin(values, chart.scale),
+                     y: options.axisX().max || this.getMaxAndMin(values, chart.scale),
                      margin:options.margin}
 
     let textStyle = fontAdapt(options.axisX.label)
