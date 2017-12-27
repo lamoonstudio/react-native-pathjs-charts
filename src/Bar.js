@@ -23,6 +23,7 @@ import { Colors, Options, fontAdapt, cyclic, color, identity } from './util'
 import _ from 'lodash'
 import Axis from './Axis'
 import GridAxis from './GridAxis'
+import BarThreshold from './BarThreshold'
 const Bar = require('paths-js/bar')
 
 export default class BarChart extends Component {
@@ -129,20 +130,41 @@ export default class BarChart extends Component {
       let colorVariationVal = numDataGroups > 1 ? numDataGroups : 3
       let color = this.color(i % colorVariationVal)
       let stroke = Colors.darkenColor(color)
+      let thresholdData = this.props.data[i % numDataGroups][Math.floor(i / numDataGroups)]['thold'];
+      if (!Array.isArray(thresholdData)) {
+        thresholdData = [thresholdData];
+      }
+      console.log('thresholdData -> ', thresholdData);
+
       return (
-                <G key={'lines' + i}>
-                    <Path  d={ c.line.path.print() } stroke={stroke} fill={color}/>
-                    {options.axisX.showLabels ?
-                        <Text fontFamily={textStyle.fontFamily}
-                          fontSize={textStyle.fontSize} fontWeight={textStyle.fontWeight} fontStyle={textStyle.fontStyle}
-                          fill={textStyle.fill} x={c.line.centroid[0]} y={labelOffset + chartArea.y.min}
-                          originX={c.line.centroid[0]} originY={labelOffset + chartArea.y.min} rotate={textStyle.rotate}
-                          textAnchor="middle">
-                          {c.item.name}
-                        </Text>
-                    : null}
-                </G>
-            )
+        <G key={'lines' + i}>
+          <Path d={c.line.path.print()} stroke={stroke} fill={color}/>
+          {options.axisX.showLabels ?
+            <Text fontFamily={textStyle.fontFamily}
+                  fontSize={textStyle.fontSize} fontWeight={textStyle.fontWeight} fontStyle={textStyle.fontStyle}
+                  fill={textStyle.fill} x={c.line.centroid[0]} y={labelOffset + chartArea.y.min}
+                  originX={c.line.centroid[0]} originY={labelOffset + chartArea.y.min} rotate={textStyle.rotate}
+                  textAnchor="middle">
+              {c.item.name}
+            </Text>
+            : null}
+          {options.axisY.showThreshold ?
+            thresholdData.map(function (thold, idx) {
+              console.log('bar -> thold', thold);
+              const key = 'thold' + i + idx;
+              const name = typeof thold.name === 'function' ? thold.name() : `${thold.name} - ${thold.val}`;
+              const value = chart.scale(thold.val);
+              const color = thold.color || '#FF0000';
+              return (<BarThreshold key={key}
+                                    name={name}
+                                    rect={c}
+                                    value={value}
+                                    style={textStyle}
+                                    strokeColor={color}/>)
+            })
+            : null}
+        </G>
+      )
     }, this)
 
     return (<Svg width={options.width} height={options.height}>

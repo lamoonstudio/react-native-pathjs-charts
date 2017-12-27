@@ -40,26 +40,35 @@ class BarChartColumnBasic extends Component {
     let data = [
       [{
         "v": 49,
-        "name": "apple"
+        "name": "apple",
+        "thold": {"name": "TH1", "val": 12},
       }, {
         "v": 42,
-        "name": "apple"
+        "name": "apple",
+        "thold": [
+          {"name": () => '', "val": 22, "color": "#FFFF00"},
+          {"name": () => '', "val": 55, "color": "#00FF00"},
+          ],
       }],
       [{
         "v": 69,
-        "name": "banana"
+        "name": "banana",
+        "thold": [{"name": "THC", "val": 30}],
       }, {
         "v": 62,
-        "name": "banana"
+        "name": "banana",
+        "thold": {"name": "TH9", "val": 44},
       }],
       [{
         "v": 29,
-        "name": "grape"
+        "name": "grape",
+        "thold": [{"name": "BV", "val": 34}],
       }, {
         "v": 15,
-        "name": "grape"
+        "name": "grape",
+        "thold": {"name": () => "Jet", "val": 39},
       }]
-    ]
+    ];
 
     let options = {
       width: 300,
@@ -97,6 +106,7 @@ class BarChartColumnBasic extends Component {
         showLines: true,
         showLabels: true,
         showTicks: true,
+        showThreshold: true,
         zeroAxis: false,
         orient: 'left',
         label: {
@@ -107,7 +117,7 @@ class BarChartColumnBasic extends Component {
         }
       }
     }
-
+    console.log(data);
     return (
       <View style={styles.container}>
         <Bar data={data} options={options} accessorKey='v'/>
