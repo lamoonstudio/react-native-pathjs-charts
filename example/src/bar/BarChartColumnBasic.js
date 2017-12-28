@@ -41,32 +41,32 @@ class BarChartColumnBasic extends Component {
       [{
         "v": 49,
         "name": "apple",
-        "thold": {"name": "TH1", "val": 12},
+        "thold": {"name": "TH1", "val": 12, "color": "#000000"},
       }, {
         "v": 42,
         "name": "apple",
         "thold": [
-          {"name": () => '', "val": 22, "color": "#FFFF00"},
-          {"name": () => '', "val": 55, "color": "#00FF00"},
+          {"name": () => 'V', "val": 22, "color": "#FFFF00"},
+          {"name": () => 'K', "val": 55, "color": "#00FF00"},
           ],
       }],
       [{
         "v": 69,
         "name": "banana",
-        "thold": [{"name": "THC", "val": 30}],
+        "thold": [{"name": "THC", "val": 30, "color": "#FF0000"}],
       }, {
         "v": 62,
         "name": "banana",
-        "thold": {"name": "TH9", "val": 44},
+        "thold": {"name": "TH9", "val": 44, "color": "#FF0000"},
       }],
       [{
         "v": 29,
         "name": "grape",
-        "thold": [{"name": "BV", "val": 34}],
+        "thold": [{"name": "BV", "val": 34, "color": "#FF0000"}],
       }, {
         "v": 15,
         "name": "grape",
-        "thold": {"name": () => "Jet", "val": 39},
+        "thold": {"name": () => "Jet", "val": 39, "color": "#FF0000"},
       }]
     ];
 

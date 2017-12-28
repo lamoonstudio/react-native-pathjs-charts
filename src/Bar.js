@@ -18,12 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 
 import React,{Component} from 'react'
 import {Text as ReactText}  from 'react-native'
-import Svg,{ G, Path, Text } from 'react-native-svg'
+import Svg,{ G, Path, Text, Line } from 'react-native-svg'
 import { Colors, Options, fontAdapt, cyclic, color, identity } from './util'
 import _ from 'lodash'
 import Axis from './Axis'
 import GridAxis from './GridAxis'
 import BarThreshold from './BarThreshold'
+import Legend from './Legend'
 const Bar = require('paths-js/bar')
 
 export default class BarChart extends Component {
@@ -124,7 +125,7 @@ export default class BarChart extends Component {
 
     let textStyle = fontAdapt(options.axisX.label)
     let labelOffset = this.props.options.axisX.label.offset || 20
-    console.log('chartArea -> ', chartArea);
+    // console.log('chartArea -> ', chartArea);
 
     let lines = chart.curves.map(function (c, i) {
       let numDataGroups = this.props.data.length || 0
@@ -150,7 +151,7 @@ export default class BarChart extends Component {
             : null}
           {options.axisY.showThreshold ?
             thresholdData.map(function (thold, idx) {
-              console.log('bar -> thold', thold);
+              // console.log('bar -> thold', thold);
               const key = 'thold' + i + idx;
               const name = typeof thold.name === 'function' ? thold.name() : `${thold.name} - ${thold.val}`;
               const value = chart.scale(thold.val);
@@ -167,11 +168,39 @@ export default class BarChart extends Component {
       )
     }, this)
 
+    const legendDict = this.props.data.reduce((array, data) => array.concat(data), [])
+      .map(data => data.thold)
+      .reduce((array, thold) => {
+        console.log('thold ->', thold);
+        console.log('array ->', array);
+        return array.concat( Array.isArray(thold) ? thold : [thold] );
+      }, [])
+      .reduce((dict, thold) => {
+        let newDict = { ...dict };
+        newDict[thold.color] = thold.name;
+        return newDict;
+      }, {});
+
+    const legends = Object.keys(legendDict).map((color, index) => {
+        const width = 40;
+        const margin = 24;
+        const positionStartX = index * width + (index > 0 ? index * margin : 0);
+        let legendName = legendDict[color];
+        legendName = typeof legendName === 'function' ?  legendName() : legendName;
+        const offsetY = labelOffset + chartArea.y.min + 24;
+        return (
+          <Legend key={`legend${index}`}
+                  positionStartX={positionStartX} y={offsetY} width={width}
+                  name={legendName} style={textStyle} strokeColor={color} />
+          )
+      });
+
     return (<Svg width={options.width} height={options.height}>
               <G x={options.margin.left} y={options.margin.top}>
                 <GridAxis scale={chart.scale} options={options.axisY} chartArea={chartArea} />
                 {lines}
                 <Axis scale={chart.scale} options={options.axisY} chartArea={chartArea} />
+                {legends}
               </G>
             </Svg>)
   }
