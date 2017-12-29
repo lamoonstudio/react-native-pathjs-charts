@@ -98,7 +98,14 @@ class BarChartColumnBasic extends Component {
           fontSize: 8,
           fontWeight: true,
           fill: '#34495E',
-          rotate: 45
+          rotate: 0,
+          offset: 10
+        },
+        legendLabel: {
+          fontFamily: 'Arial',
+          fontSize: 10,
+          fontWeight: true,
+          fill: '#FF0000'
         }
       },
       axisY: {
@@ -107,6 +114,7 @@ class BarChartColumnBasic extends Component {
         showLabels: true,
         showTicks: true,
         showThreshold: true,
+        showThresholdLabels: false,
         zeroAxis: false,
         orient: 'left',
         label: {

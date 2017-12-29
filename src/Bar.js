@@ -125,6 +125,8 @@ export default class BarChart extends Component {
 
     let textStyle = fontAdapt(options.axisX.label)
     let labelOffset = this.props.options.axisX.label.offset || 20
+    let legendTextStyle =  options.axisX.legendLabel ? fontAdapt(options.axisX.legendLabel) : textStyle;
+
     // console.log('chartArea -> ', chartArea);
 
     let lines = chart.curves.map(function (c, i) {
@@ -151,13 +153,12 @@ export default class BarChart extends Component {
             : null}
           {options.axisY.showThreshold ?
             thresholdData.map(function (thold, idx) {
-              // console.log('bar -> thold', thold);
               const key = 'thold' + i + idx;
               const name = typeof thold.name === 'function' ? thold.name() : `${thold.name} - ${thold.val}`;
               const value = chart.scale(thold.val);
               const color = thold.color || '#FF0000';
               return (<BarThreshold key={key}
-                                    name={name}
+                                    name={options.axisY.showThresholdLabels ? name : ''}
                                     rect={c}
                                     value={value}
                                     style={textStyle}
@@ -191,7 +192,7 @@ export default class BarChart extends Component {
         return (
           <Legend key={`legend${index}`}
                   positionStartX={positionStartX} y={offsetY} width={width}
-                  name={legendName} style={textStyle} strokeColor={color} />
+                  name={legendName} style={legendTextStyle} strokeColor={color} />
           )
       });
 
