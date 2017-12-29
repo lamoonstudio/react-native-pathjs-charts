@@ -72,7 +72,7 @@ class BarChartColumnBasic extends Component {
 
     let options = {
       width: 300,
-      height: 300,
+      height: 400,
       margin: {
         top: 20,
         left: 25,
@@ -122,7 +122,8 @@ class BarChartColumnBasic extends Component {
           fontSize: 8,
           fontWeight: true,
           fill: '#34495E'
-        }
+        },
+        max: 90,
       }
     }
     console.log(data);

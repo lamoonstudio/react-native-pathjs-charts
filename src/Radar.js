@@ -20,6 +20,7 @@ import React, {Component} from 'react'
 import {Text as ReactText}  from 'react-native'
 import Svg,{ G, Path, Line, Text} from 'react-native-svg'
 import { Options, identity, styleSvg, fontAdapt } from './util'
+import Legend from './Legend'
 const Radar = require('paths-js/radar')
 
 function accessKeys(keys) {
@@ -88,6 +89,26 @@ export default class RadarChart extends Component
       return (<Path key={i} d={c.polygon.path.print()} fill={color} fillOpacity={0.6} />)
     })
 
+    const storkeFill = this.props.options.thresholdStroke;
+    const thresholds = this.props.thresholds.map((threshold, index) => {
+      const color = (storkeFill instanceof Array ? storkeFill[index] : storkeFill).color;
+      return [Radar({
+        center: self.props.center || [x, y],
+        r: self.props.options.r || radius,
+        data: threshold,
+        accessor: self.props.accessor || accessKeys(keys),
+        max: self.props.options.max,
+        rings: self.props.options.rings
+      }), color]
+    })
+      .map((thresholdData) => {
+        let color = thresholdData[1]
+        return thresholdData[0].curves.map(function (c, i) {
+          return (<Path key={i} d={c.polygon.path.print()} fill={'none'}
+                        stroke={color} strokeOpacity={1} strokeDashoffset={0} strokeDasharray={[5, 5]}/>)
+        })
+      })
+
     const length = chart.rings.length
     const rings = chart.rings.map(function (r, i) {
       if (i !== length - 1 ){
@@ -103,30 +124,50 @@ export default class RadarChart extends Component
       }
 
       return (
-              <G key={'label' + i}>
-                  <Line x1={p[0]} y1={p[1]} x2={center[0]} y2={center[1]} stroke={colors.stroke} strokeOpacity={colors.strokeOpacity}/>
-                  <Text
-                      fontFamily={textStyle.fontFamily}
-                      fontSize={textStyle.fontSize}
-                      fontWeight={textStyle.fontWeight}
-                      fontStyle={textStyle.fontStyle}
-                      fill={textStyle.fill}
-                      onPress={onLabelPress}
-                      textAnchor="middle" x={Math.floor(p[0])} y={Math.floor(p[1])}>{keys[i]}
-                  </Text>
-              </G>
-            )
+        <G key={'label' + i}>
+          <Line x1={p[0]} y1={p[1]} x2={center[0]} y2={center[1]} stroke={colors.stroke} strokeOpacity={colors.strokeOpacity}/>
+          <Text
+            fontFamily={textStyle.fontFamily}
+            fontSize={textStyle.fontSize}
+            fontWeight={textStyle.fontWeight}
+            fontStyle={textStyle.fontStyle}
+            fill={textStyle.fill}
+            onPress={onLabelPress}
+            textAnchor="middle" x={Math.floor(p[0])} y={Math.floor(p[1])}>{keys[i]}
+          </Text>
+        </G>
+      )
     })
+
+    const labelOffset = this.props.options.height || 120;
+    const legendTextStyle =  options.legendLabel ? fontAdapt(options.legendLabel) : textStyle;
+
+    const legends = this.props.options.thresholdStroke.map((item, index) => {
+      const width = 40;
+      const margin = 24;
+      const positionStartX = index * width + (index > 0 ? index * margin : 0);
+      let legendName = item.name;
+      let color = item.color;
+      legendName = typeof legendName === 'function' ?  legendName() : legendName;
+      const offsetY = labelOffset + 24;
+      return (
+        <Legend key={`legend${index}`}
+                positionStartX={positionStartX} y={offsetY} width={width}
+                name={legendName} style={legendTextStyle} strokeColor={color} />
+      )
+    });
 
     return (
       <Svg width={options.width} height={options.height}>
-          <G x={options.margin.left} y={options.margin.top}>
-              {labels}
-              <G x={options.margin.left * -1} y={options.margin.top * -1}>
-                  {rings}
-                  {curves}
-              </G>
+        <G x={options.margin.left} y={options.margin.top}>
+          {labels}
+          <G x={options.margin.left * -1} y={options.margin.top * -1}>
+            {rings}
+            {curves}
+            {thresholds}
+            {legends}
           </G>
+        </G>
       </Svg>
     );
   }

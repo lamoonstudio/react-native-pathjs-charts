@@ -52,9 +52,29 @@ class RadarChartBasic extends Component {
       "endurance": 44
     }]
 
+    let thresholds = [[{
+      "speed": 74,
+      "balance": 29,
+      "explosives": 60,
+      "energy": 50,
+      "flexibility": 20,
+      "agility": 65,
+      "endurance": 34
+    }],
+      [{
+        "speed": 66,
+        "balance": 34,
+        "explosives": 58,
+        "energy": 52,
+        "flexibility": 25,
+        "agility": 68,
+        "endurance": 68
+      }]
+    ]
+
     let options = {
       width: 290,
-      height: 290,
+      height: 400,
       margin: {
         top: 20,
         left: 20,
@@ -75,12 +95,16 @@ class RadarChartBasic extends Component {
         fontWeight: true,
         fill: '#34495E',
         onLabelPress: this.onLabelPress
-      }
+      },
+      thresholdStroke: [
+        {name: 'x', color: '#7F9F00'},
+        {name: 'y', color: '#FF0000'}
+        ],
     }
 
     return (
       <View style={styles.container}>
-        <Radar data={data} options={options} />
+        <Radar data={data} thresholds={thresholds} options={options} />
       </View>
     )
   }
