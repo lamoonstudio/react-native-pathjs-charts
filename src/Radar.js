@@ -88,26 +88,28 @@ export default class RadarChart extends Component
       const color = colorsFill instanceof Array ? colorsFill[i] : colorsFill;
       return (<Path key={i} d={c.polygon.path.print()} fill={color} fillOpacity={0.6} />)
     })
-
-    const storkeFill = this.props.options.thresholdStroke;
+    const thresholdWidth = this.props.options.thresholdWidth || 2;
+    const thresholdStyle = this.props.options.threshold;
     const thresholds = this.props.thresholds.map((threshold, index) => {
-      const color = (storkeFill instanceof Array ? storkeFill[index] : storkeFill).color;
-      return [Radar({
-        center: self.props.center || [x, y],
-        r: self.props.options.r || radius,
-        data: threshold,
-        accessor: self.props.accessor || accessKeys(keys),
-        max: self.props.options.max,
-        rings: self.props.options.rings
-      }), color]
-    })
+      const color = (thresholdStyle instanceof Array ? thresholdStyle[index] : thresholdStyle).strokeColor;
+        return [Radar({
+          center: self.props.center || [x, y],
+          r: self.props.options.r || radius,
+          data: threshold,
+          accessor: self.props.accessor || accessKeys(keys),
+          max: self.props.options.max,
+          rings: self.props.options.rings
+        }), color]
+      })
       .map((thresholdData) => {
-        let color = thresholdData[1]
+        let color = thresholdData[1];
         return thresholdData[0].curves.map(function (c, i) {
           return (<Path key={i} d={c.polygon.path.print()} fill={'none'}
-                        stroke={color} strokeOpacity={1} strokeDashoffset={0} strokeDasharray={[5, 5]}/>)
+                        stroke={color} strokeOpacity={1} strokeDashoffset={0} strokeDasharray={[5, 5]}
+                        strokeWidth={thresholdWidth}
+          />)
         })
-      })
+      });
 
     const length = chart.rings.length
     const rings = chart.rings.map(function (r, i) {
@@ -142,18 +144,20 @@ export default class RadarChart extends Component
     const labelOffset = this.props.options.height || 120;
     const legendTextStyle =  options.legendLabel ? fontAdapt(options.legendLabel) : textStyle;
 
-    const legends = this.props.options.thresholdStroke.map((item, index) => {
+    const legends = this.props.options.threshold.map((item, index) => {
       const width = 40;
       const margin = 24;
       const positionStartX = index * width + (index > 0 ? index * margin : 0);
       let legendName = item.name;
-      let color = item.color;
+      let color = item.strokeColor;
       legendName = typeof legendName === 'function' ?  legendName() : legendName;
       const offsetY = labelOffset + 24;
       return (
         <Legend key={`legend${index}`}
                 positionStartX={positionStartX} y={offsetY} width={width}
-                name={legendName} style={legendTextStyle} strokeColor={color} />
+                name={legendName} style={legendTextStyle}
+                strokeColor={color} strokeWidth={thresholdWidth}
+        />
       )
     });
 

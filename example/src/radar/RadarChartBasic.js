@@ -96,11 +96,12 @@ class RadarChartBasic extends Component {
         fill: '#34495E',
         onLabelPress: this.onLabelPress
       },
-      thresholdStroke: [
-        {name: 'x', color: '#7F9F00'},
-        {name: 'y', color: '#FF0000'}
+      threshold: [
+        {name: 'x', strokeColor: '#7F9F00'},
+        {name: 'y', strokeColor: '#FF0000'}
         ],
-    }
+      thresholdWidth: 2,
+    };
 
     return (
       <View style={styles.container}>
