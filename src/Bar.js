@@ -186,7 +186,7 @@ export default class BarChart extends Component {
         const positionStartX = index * width + (index > 0 ? index * margin : 0);
         let legendName = legendDict[color];
         legendName = typeof legendName === 'function' ?  legendName() : legendName;
-        const offsetY = labelOffset + chartArea.y.min + 24;
+        const offsetY = labelOffset + chartArea.y.min + (options.options.axisX.legendLabel.offset || 20);
         return (
           <Legend key={`legend${index}`}
                   positionStartX={positionStartX} y={offsetY} width={width}

@@ -72,11 +72,11 @@ class BarChartColumnBasic extends Component {
 
     let options = {
       width: 300,
-      height: 400,
+      height: 420,
       margin: {
         top: 20,
         left: 25,
-        bottom: 50,
+        bottom: 70,
         right: 20
       },
       color: '#2980B9',
@@ -103,9 +103,10 @@ class BarChartColumnBasic extends Component {
         },
         legendLabel: {
           fontFamily: 'Arial',
-          fontSize: 10,
+          fontSize: 12,
           fontWeight: true,
-          fill: '#FF0000'
+          fill: '#FF0000',
+          offset: 40
         }
       },
       axisY: {
