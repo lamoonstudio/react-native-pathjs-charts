@@ -3,7 +3,7 @@ import { G, Line, Text } from 'react-native-svg'
 
 
 export default function BarThreshold (props) {
-  const { name, rect, value, style, strokeColor } = props;
+  const { name, rect, value, style, strokeColor, strokeWidth } = props;
 
   const xList = rect.line.path.points()
     .map(coordinate => coordinate[0]);
@@ -21,6 +21,7 @@ export default function BarThreshold (props) {
   return (
     <G>
       <Line x1={minX} y1={value} x2={minX + width} y2={value} stroke={strokeColor} strokeOpacity={1}
+            strokeWidth={strokeWidth || 2}
             strokeDashoffset={0} strokeDasharray={[5, 5]}/>
       <Text
         fontFamily={style.fontFamily}

@@ -126,8 +126,7 @@ export default class BarChart extends Component {
     let textStyle = fontAdapt(options.axisX.label)
     let labelOffset = this.props.options.axisX.label.offset || 20
     let legendTextStyle =  options.axisX.legendLabel ? fontAdapt(options.axisX.legendLabel) : textStyle;
-
-    // console.log('chartArea -> ', chartArea);
+    const thresholdStyle = this.props.options.axisY.threshold || {};
 
     let lines = chart.curves.map(function (c, i) {
       let numDataGroups = this.props.data.length || 0
@@ -162,18 +161,17 @@ export default class BarChart extends Component {
                                     rect={c}
                                     value={value}
                                     style={textStyle}
-                                    strokeColor={color}/>)
+                                    strokeColor={color}
+                                    strokeWidth={thresholdStyle.strokeWidth} />)
             })
             : null}
         </G>
       )
-    }, this)
+    }, this);
 
     const legendDict = this.props.data.reduce((array, data) => array.concat(data), [])
       .map(data => data.thold)
       .reduce((array, thold) => {
-        console.log('thold ->', thold);
-        console.log('array ->', array);
         return array.concat( Array.isArray(thold) ? thold : [thold] );
       }, [])
       .reduce((dict, thold) => {
@@ -192,7 +190,8 @@ export default class BarChart extends Component {
         return (
           <Legend key={`legend${index}`}
                   positionStartX={positionStartX} y={offsetY} width={width}
-                  name={legendName} style={legendTextStyle} strokeColor={color} />
+                  name={legendName} style={legendTextStyle}
+                  strokeColor={color} strokeWidth={thresholdStyle.strokeWidth}/>
           )
       });
 
