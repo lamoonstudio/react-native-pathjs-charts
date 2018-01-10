@@ -4,7 +4,7 @@ import { G, Text, Line } from 'react-native-svg'
 
 export default function Legend(props) {
   const { positionStartX, y, width, name, style, strokeColor, strokeWidth} = props;
-  const textPositionY = 0;
+  const textPositionY = 2;
 
   return (
     <G x={positionStartX} y={y}>
